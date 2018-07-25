@@ -53,10 +53,44 @@ class UserManager(models.Manager):
             errors['email'] = 'This user does not exist'
         return errors
 
+    def validate_place(self, post_data):
+        errors = {}
+        if len(post_data['place_name']) < 2:
+            errors['place_name'] = 'must be longer than 2 characters'
+        if len(post_data['street']) < 3:
+            errors['street'] = 'please input a valid street'
+        if len(post_data['city']) < 3:
+            errors['city'] = 'please provide a valid location'
+        if len(post_data['zip_code']) < 5:
+            errors['zip_code'] = 'please provide a valid zip'
+        if len(post_data['description']) < 15:
+            errors['description'] = 'please enter a longer description'
+        if post_data['state'] == 'Choose State':
+            errors['state'] = 'select a state'
+        return errors
+
 class User(models.Model):
     first_name = models.CharField(max_length = 60)
     last_name = models.CharField(max_length = 60)
     email = models.CharField(max_length = 60)
     password = models.CharField(max_length = 255)
     #replaces objects call from user.objects.... to user.UserManager().
+    objects = UserManager()
+
+class Friend(models.Model):
+    first_name = models.CharField(max_length = 60)
+    last_name = models.CharField(max_length = 60)
+    email = models.CharField(max_length = 60)
+    of_user = models.ManyToManyField(User, related_name = "friends")
+    objects = UserManager()
+
+class Place(models.Model):
+    place_name = models.CharField(max_length = 60)
+    street = models.CharField(max_length = 60)
+    city = models.CharField(max_length = 60)
+    state = models.CharField(max_length = 2)
+    zip_code = models.IntegerField()
+    fit_type = models.CharField(max_length = 60)
+    desc = models.TextField(max_length = 60)
+    is_going = models.ManyToManyField(User, related_name = "this_place")
     objects = UserManager()

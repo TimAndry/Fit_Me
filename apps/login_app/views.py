@@ -38,7 +38,13 @@ def registration(request):
     else:
         #hash the password
         hashed_pw = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt())
+        
         user = User.objects.create(first_name = request.POST['fname'], last_name = request.POST['lname'], password = hashed_pw, email = request.POST['email'])
+        #creates a user instance
+
+        friend = Friend.objects.create(first_name = request.POST['fname'], last_name = request.POST['lname'], email = request.POST['email'])
+        #uses the registration information to add that name to the friend database
+
         request.session['user_id'] = user.id
         return redirect('user/' + str(request.session['user_id']))
     return redirect('/')
@@ -66,7 +72,53 @@ def login(request):
 
 def user(request, user_id):
     user = User.objects.get(id = request.session['user_id'])
+    #gets the current user
+    
+    place = Place.objects.all()
+    #gets a list of places
+
+    follow = Friend.objects.all()
+    #gets a list of all the users (later i'll use this to create a list of suggested users like User.objects.filter(some filter)
+
+    friends = Friend.objects.filter(of_user = request.session['user_id'])
+    #creates the list of friends
+
+    going = Place.objects.filter(is_going = request.session['user_id'])
+    #shows the places the user is going
+
     context = {
-        'user':user
+        'user':user,
+        'place':place,
+        'follow': follow,
+        'friends': friends,
+        'going': going,
     }
+    
     return render(request, 'login_app/user.html', context)
+
+
+def addworkout(request):
+    result = User.objects.validate_place(request.POST)
+    if len(result) > 0:
+        for key in result.keys():
+            print(result[key])
+            messages.error(request, result[key], extra_tags = key)
+        return redirect('user/' + str(request.session['user_id']))
+    else:
+        Place.objects.create(place_name = request.POST['place_name'], street = request.POST['street'], city = request.POST['city'], state = request.POST['state'], zip_code = request.POST['zip_code'], fit_type = request.POST['fit_type'], desc = request.POST['description'])
+    return redirect('user/' + str(request.session['user_id']))
+
+
+def going(request):
+    is_going = User.objects.get(id = request.POST['user'])
+    this_place = Place.objects.get(id = request.POST['place'])
+    is_going.this_place.add(this_place)
+    return redirect('user/' + str(request.session['user_id']))
+
+
+def follow(request):
+    of_user = User.objects.get(id = request.POST['user'])
+    friend = Friend.objects.get(id = request.POST['friend'])
+    print(of_user.first_name, friend.first_name)
+    of_user.friends.add(friend)
+    return redirect('user/' + str(request.session['user_id']))

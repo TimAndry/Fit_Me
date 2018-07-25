@@ -5,16 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=for, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>FitMe {{user.first_name}} {{user.last_name}}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=for, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
+        crossorigin="anonymous"></script>
     <style>
         #wrapper {
             margin: auto;
             width: 80%;
             margin-top: 100px;
-            border: 1px solid #000;
         }
 
         #register {
@@ -34,17 +42,262 @@
         .messages {
             color: red;
         }
+
+        #places_table {
+            margin: auto;
+            width: 80%;
+            margin-top: 80px;
+        }
+        #user{
+            margin: auto;
+            width: 35%;
+            display: inline-block;
+            margin-top: 50px;
+        }
+        
+        #add_workout{
+            margin: auto;
+            margin-top: 50px;
+            width: 50%;
+            margin-left: 12%;
+            display: inline-block;
+            vertical-align: top;
+        }
+        footer{
+            height: 200px;
+        }
+
+        .follow{
+            background-color: blue;
+            color: white;
+            padding:35px 5px 35px 5px;
+            width: 120px;
+            display: inline-block;
+            margin-right: 5px;
+            text-align: center;
+            border-radius: 200px;
+        }
+
+        .follow:hover{
+            background-color: green;
+        }
+
+        .follow a{
+            color: white;
+            text-decoration: none;
+        }
+        #follow{
+            overflow:scroll;
+        }
     </style>
 </head>
 
 <body>
     <div id='wrapper'>
-        <h1 class='messages'>Hello {{user.first_name}},</h1>
-        <p>Welcome to your home page</p>
-        <p>first name: {{user.first_name}}</p>
-        <p>last name: {{user.last_name}}</p>
-        <p>email: {{user.email}}</p>
+        <h2>Follow suggestions</h2><br>
+        <div id='follow'>
+        {% for follow in follow %}
+        <form action='/follow' method='POST' class='follow'>
+            {% csrf_token %}
+            <input type='hidden' value={{user.id}} name='user'>
+            <input type='hidden' value={{follow.id}} name='friend'>
+            <button type="submit" class="btn btn-success btn-sm">{{follow.first_name}} {{follow.last_name}}</button>
+        </form>
+        {% endfor %}
+        </div>
+        
+        <div id="user">
+            <h1 class='messages'>Hello {{user.first_name}},</h1>
+            <p>Welcome to your home page</p>
+            <p>first name: {{user.first_name}}</p>
+            <p>last name: {{user.last_name}}</p>
+            <p>email: {{user.email}}</p>
+            <br>
+            <h4 class="messages">Friends</h4>
+            <p>
+            {% for friends in friends %}
+                {{friends.first_name}} {{friends.last_name}}, 
+            {% endfor %}
+            </p><br>
+            <h4 class="messages">Where Im Going</h4>
+            {%for going in going%}
+            <p>{{going.place_name}}</p>
+            {%endfor%}        
+        </div>
+        <div id="add_workout">
+            <h3>Add a new workout</h3>
+            <form action='/addworkout' method='POST'>
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="place_name">Name of the place of workout</label>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if 'place_name' in message.tags %}
+                        <p class = 'messages'> {{message}} </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    <input name="place_name" type="text" class="form-control form-control-sm" id="place_name">
+                </div>
+                
+                <div class="form-group">
+                        <label class="mr-sm-2" for="inlineFormCustomSelect">Type of workout</label>
+                        <select name = "fit_type" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                          <option value="1">One</option>
+                          <option value="2">Two</option>
+                          <option value="3">Three</option>
+                          <option value="1">One</option>
+                          <option value="2">Two</option>
+                          <option value="3">Three</option>
+                          <option value="1">One</option>
+                          <option value="2">Two</option>
+                          <option value="3">Three</option>
+                          <option value="3">Three</option>
+                        </select>
+                </div>
+                <br>
+                <h4>Where is this workout</h4>
+
+                <div class="form-group">
+                    <label for="street">Street address</label>
+                    {% if messages %}
+                    {% for message in messages %}
+                        {% if 'street' in message.tags %}
+                        <p class = 'messages'> {{message}} </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    <input name="street" type="text" class="form-control form-control-sm" id="street">
+                </div>
+                
+                <div class="form-group">
+                    <label for="city">City</label>
+                    {% if messages %}
+                    {% for message in messages %}
+                        {% if 'city' in message.tags %}
+                        <p class = 'messages'> {{message}} </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    <input name="city" type="text" class="form-control form-control-sm" id="exampleInputEmail1">
+                </div>
+
+                <div class="my-1-sm">
+                    <label class="mr-sm-2" for="inlineFormCustomSelect">State</label>
+                    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="state">
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="1">One</option>
+                      <option value="2">Two</option>
+                      <option value="3">Three</option>
+                      <option value="3">Three</option>
+                    </select>
+                </div>
+                  
+                <div class="form-group">
+                    <label for="zip_code">Zip Code</label>
+                    {% if messages %}
+                    {% for message in messages %}
+                        {% if 'zip_code' in message.tags %}
+                        <p class = 'messages'> {{message}} </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    <input name="zip_code" type="text" class="form-control form-control-sm" id="exampleInputEmail1">
+                </div>
+                <br>
+                <h4 for="Textarea">Describe the workout</h4>
+                {% if messages %} 
+                {% for message in messages %} 
+                    {% if 'description' in message.tags %}
+                        <p class='messages'> {{message}} </p>
+                        {% endif %} 
+                    {% endfor %} 
+                {% endif %}
+                <textarea name='description' class="form-control" id="description" rows="3"></textarea>
+                <br>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                
+                
+            </form>
+        </div>
+        <div id="places_table">
+            <table class="table table-sm table-hover table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">name</th>
+                        <th scope="col">Type of workout</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Friends Going</th>
+                    </tr>
+                </thead>
+                {% for place in place %}
+                <tbody>
+                    <tr>
+                        <td>{{place.place_name}}</td>
+                        <td>{{place.fit_type}}</td>
+                        <td>{{place.street}} {{place.city}}, {{place.state}}</td>
+                        <td>*Friends Going*</td>
+                        <td><form action='/going' method='POST' id='liked'>
+                            {% csrf_token %}
+                            <input type='hidden' value={{user.id}} name='user'>
+                            <input type='hidden' value={{place.id}} name='place'>
+                            <button type="submit" class="btn btn-success btn-sm">Going!</button>
+                        </form></td>
+                    </tr>
+                </tbody>
+                
+                {% endfor %}
+            </table>
+        </div>
+        
     </div>
+    <footer></footer>
 </body>
 
 </html>
