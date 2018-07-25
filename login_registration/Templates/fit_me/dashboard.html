@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Welcome to Fit-me</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
+</head>
+
+<body>
+    <h2>Upcoming workouts</h2>
+    <!-- Be sure to come back and adjust form routing -->
+    <form action="/" method="POST">
+        <p>Type of workout:</p>
+        <input type="checkbox" name="type" value="Yoga">Yoga/Meditative
+        <input type="checkbox" name="type" value="Walking">Walking
+        <input type="checkbox" name="type" value="Running">Running
+        <input type="checkbox" name="type" value="Strength">Strength
+        <input type="checkbox" name="type" value="Hiking">Hiking
+        <input type="checkbox" name="type" value="Inthesnow">Snowfun
+        <input type="checkbox" name="type" value="Diet">Diet & Nutrition
+        <p>
+            <input type="datetime-local" name="datetime" value="2018-00-12T19:30" min="2018-00-07T00:00" max="2018-00-14T00:00" />
+        </p>
+        <p>Location:
+            <input type="text" name="location">
+        </p>
+    </form>
+    <div id="map" style="width:500px;height:500px">
+        <script>
+            function myMap() {
+                var mapOptions = {
+                    center: new google.maps.LatLng(41.8781, -87.6298),
+                    zoom: 10,
+                    mapTypeId: google.maps.MapTypeId.HYBRID
+                }
+                var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+            }
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
+    </div>
+    <div id="Suggested Meets">
+        <h2>My Suggested Meets</h2>
+        <fieldset>
+            <!-- for loop here; manyToMany between users and friends; loop to populate friends' meets -->
+        </fieldset>
+    </div>
+    <div id="Available Meets">
+        <h2>Available Meets</h2>
+        <fieldset>
+            <!-- populate options from form above -->
+        </fieldset>
+    </div>
+</body>
+
+</html>
