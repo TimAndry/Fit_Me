@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        #wrapper {
+            margin: auto;
+            width: 50%;
+            margin-top: 100px;
+        }
+        
+        #register{
+            margin: auto;
+            display: inline-block;
+            width: 35%;
+        }
+
+        #login{
+            margin: auto;
+            display: inline-block;
+            vertical-align: top;
+            width: 35%;
+            margin-left: 28%;
+        }
+
+        .messages {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='wrapper'>
+        <p class='messages'>{{request.session.success}}</p>
+        <div id='register'>
+            <h2>Register</h2>
+            <form action='/registration' method='POST'>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="firstname">First Name</label>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if 'fname' in message.tags %}
+                        <p class = 'messages'> {{message}} </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    <input name="fname" type="text" class="form-control" id="fname" aria-describedby="emailHelp" placeholder="First Name">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Last Name</label>
+                    {% if messages %}
+                    {% for message in messages %}
+                        {% if 'lname' in message.tags %}
+                        <p class = 'messages'> {{message}} </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    <input name="lname" type="text" class="form-control" id="lname" aria-describedby="emailHelp" placeholder="Last Name">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    {% if messages %}
+                    {% for message in messages %}
+                        {% if 'email' in message.tags %}
+                        <p class = 'messages'> {{message}} </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    {% if messages %}
+                    {% for message in messages %}
+                        {% if 'password' in message.tags %}
+                        <p class = 'messages'> {{message}} </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    <input name='password' type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Confirm Password</label>
+                    {% if messages %}
+                    {% for message in messages %}
+                        {% if 'check_password' in message.tags %}
+                        <p class = 'messages'> {{message}} </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    <input name="check_password" type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+
+
+        <div id='login'>
+            <h2>Login</h2>
+            <form action='/login' method='POST'>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    {% if messages %}
+                    {% for message in messages %}
+                        {% if 'em2ail' in message.tags %}
+                        <p class = 'messages'> {{message}} </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    <input name="em2ail" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    {% if messages %}
+                    {% for message in messages %}
+                        {% if 'pass2word' in message.tags %}
+                        <p class = 'messages'> {{message}} </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                    <input name='pass2word' type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

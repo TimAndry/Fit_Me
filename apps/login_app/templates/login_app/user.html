@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=for, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        #wrapper {
+            margin: auto;
+            width: 80%;
+            margin-top: 100px;
+            border: 1px solid #000;
+        }
+
+        #register {
+            margin: auto;
+            display: inline-block;
+            width: 35%;
+        }
+
+        #login {
+            margin: auto;
+            display: inline-block;
+            vertical-align: top;
+            width: 35%;
+            margin-left: 28%;
+        }
+
+        .messages {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='wrapper'>
+        <h1 class='messages'>Hello {{user.first_name}},</h1>
+        <p>Welcome to your home page</p>
+        <p>first name: {{user.first_name}}</p>
+        <p>last name: {{user.last_name}}</p>
+        <p>email: {{user.email}}</p>
+    </div>
+</body>
+
+</html>
