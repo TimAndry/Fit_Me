@@ -97,7 +97,7 @@
         <h2>My Suggested Meets</h2>
         <fieldset>
           {% for friends in friends %}
-          {{ friends }}
+          <p><a href ="">{{ friends.first_name }} {{ friends.last_name}}</a></p>
           {% endfor %}
             <!-- for loop here; manyToMany between users and friends; loop to populate friends' meets -->
         </fieldset>
@@ -118,7 +118,8 @@
             <td>{{ place.place_name }}</td>
             <td>{{ place.fit_type }}</td>
             <td>{{ place.desc }}</td>
-            <td>{{ place.street }} {{ place.city }} {{ place.state }} {{ place.zip_code }}</td>
+            <td><script>{{ place.street }} {{ place.city }} {{ place.state }} {{ place.zip_code }}</script>
+            <script>https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=AIzaSyAS_cedue3vzgmFqik8tHHOFirhkWdKwNc</script></td>
             <td>
               <a href="">View</a>
               <a href="">Edit</a>
