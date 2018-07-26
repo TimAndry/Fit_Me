@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Welcome to Fit-me</title>
+    <title>Welcome to FitMe</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script src="main.js"></script>
@@ -96,18 +96,22 @@
     <div id="Suggested Meets">
         <h2>My Suggested Meets</h2>
         <fieldset>
+          {% for friends in friends %}
+          {{ friends }}
+          {% endfor %}
             <!-- for loop here; manyToMany between users and friends; loop to populate friends' meets -->
         </fieldset>
     </div>
     <div id="Available Meets">
         <h2>Available Meets</h2>
         <fieldset>
+          <table>
           <tr>
-            <th>Venue</th>
-            <th>Type of workout</th>
-            <th>Description</th>
-            <th>Location</th>
-            <th>Actions</th>
+            <th><b>Venue</b></th>
+            <th><b>Type of workout</b></th>
+            <th><b>Description</b></th>
+            <th><b>Location</b></th>
+            <th><b>Actions</b></th>
           </tr>
           {% for place in place %}
           <tr>
@@ -121,6 +125,7 @@
             </td>
           </tr>
           {% endfor %}
+        </table>
             <!-- populate options from form above -->
         </fieldset>
     </div>
