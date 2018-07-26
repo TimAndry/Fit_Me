@@ -4,6 +4,7 @@ from django.contrib import messages
 from .models import *
 import re, bcrypt
 from django.db.models import Q
+from geopy.geocoders import Nominatim
 #added q import for easier queryset management
 """
 
@@ -18,7 +19,7 @@ $                  // the end of the string
 
 """
 
-
+geolocator = Nominatim()
 
 #use regualr expression to validate email
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
@@ -97,6 +98,15 @@ def user(request, user_id):
 
     going = Place.objects.filter(is_going = request.session['user_id'])
     #shows the places the user is going
+    
+    street = Place.objects.get(id = 2).street
+    city = Place.objects.get(id = 2).city
+    state = Place.objects.get(id = 2).state
+    location = str(street) + ", " + str(city) + ", "+  str(state)
+    getlatlong = geolocator.geocode(location)
+    latlong = (getlatlong.latitude, getlatlong.longitude)
+    print(latlong)
+
 
     context = {
         'user':user,
@@ -106,7 +116,7 @@ def user(request, user_id):
         'going': going,
     }
     
-    return render(request, 'login_app/user.html', context)
+    return render(request, 'login_app/user.html', context, latlong)
 
 
 def addworkout(request):
@@ -137,17 +147,40 @@ def follow(request):
 
 def edit(request):
     if request.method == 'POST':
-        request.session['edit'] = Place.objects.get(id = request.POST['edit']).id
+        request.session['place'] = Place.objects.get(id = request.POST['edit']).id
         return redirect('/update')
 
 def update(request):
 
     return render(request, 'login_app/edit.html')
 
+def change(request):
+    result = User.objects.validate_place(request.POST)
+    if len(result) > 0:
+         
+        for key in result.keys():
+            print(result[key])
+            messages.error(request, result[key], extra_tags = key)
+        return redirect('/edit')
+    else:
+        place = Place.objects.get(id = request.session['place'])
+        place.place_name = request.POST['place_name']
+        place.fit_type = request.POST['fit_type']
+        place.desc = request.POST['description']
+        place.date = request.POST['date']
+        place.street = request.POSt['street']
+        place.city = request.POSt['city']
+        place.state = request.POSt['state']
+        place.zip_code = request.POSt['zip_code']
+        place.save()
+        return redirect('/user/' + str(request.session['user_id']))
+
 def cancel(request):
     cancel = Place.objects.get(id = request.POST['cancel'])
     cancel.delete()
     return redirect('user/' + str(request.session['user_id']))
+
+
 def logout(request):
     request.session.clear()
     return redirect('/')
