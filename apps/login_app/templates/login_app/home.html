@@ -9,9 +9,31 @@
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script src="main.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
+    <style>
+    #topbar {
+      border: 4px solid black;
+      padding: 7px;
+    }
+    #topbar li {
+      display: inline;
+    }
+    </style>
 </head>
 
 <body>
+    <div id="topbar">
+        <ul>
+            <li>Welcome {{ user.first_name }}</li>
+            <li>
+                <a href="/user/{{ user.id }}">My account</a>
+            </li>
+            <li>
+                <a href="/logout" method="POST">
+                    <input type="submit" value="Logout">
+                </a>
+            </li>
+        </ul>
+    </div>
     <h2>Upcoming workouts</h2>
     <!-- Be sure to come back and adjust form routing -->
     <form action="/" method="POST">
@@ -80,6 +102,25 @@
     <div id="Available Meets">
         <h2>Available Meets</h2>
         <fieldset>
+          <tr>
+            <th>Venue</th>
+            <th>Type of workout</th>
+            <th>Description</th>
+            <th>Location</th>
+            <th>Actions</th>
+          </tr>
+          {% for place in place %}
+          <tr>
+            <td>{{ place.place_name }}</td>
+            <td>{{ place.fit_type }}</td>
+            <td>{{ place.desc }}</td>
+            <td>{{ place.street }} {{ place.city }} {{ place.state }} {{ place.zip_code }}</td>
+            <td>
+              <a href="">View</a>
+              <a href="">Edit</a>
+            </td>
+          </tr>
+          {% endfor %}
             <!-- populate options from form above -->
         </fieldset>
     </div>
