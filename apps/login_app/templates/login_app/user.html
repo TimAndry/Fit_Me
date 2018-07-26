@@ -10,14 +10,14 @@
     <meta name="viewport" content="width=for, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> 
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
         crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em"
-        crossorigin="anonymous"></script>
+   
     <style>
         #wrapper {
             margin: auto;
@@ -138,12 +138,11 @@
             <p><b>last name:</b> {{user.last_name}}</p>
             <p><b>email:</b> {{user.email}}</p>
             <br>
-            <h4 class="messages">Friends</h4>
-            <p>
+            <h4 class="messages">Following</h4>
             {% for friends in friends %}
-                {{friends.first_name}} {{friends.last_name}}, 
+                <p class="follow">{{friends.first_name}} {{friends.last_name}}</p> 
             {% endfor %}
-            </p><br>
+            <br>
             <h4 class="messages">Where Im Going</h4>
             {%for going in going%}
             <p>{{going.place_name}}</p>
@@ -181,6 +180,10 @@
                           <option value="3">Three</option>
                         </select>
                 </div>
+                <div class="form-group">
+                    <label class="mr-sm-2" for="date">Event Date</label><br>
+                    <input type="date"  name="date">
+                </div> 
                 <br>
                 <h4>Where is this workout</h4>
 
@@ -298,6 +301,7 @@
                         <th scope="col">name</th>
                         <th scope="col">Type of workout</th>
                         <th scope="col">Location</th>
+                        <th scope="col">Date</th>
                         <th scope="col">Friends Going</th>
                     </tr>
                 </thead>
@@ -307,6 +311,7 @@
                         <td>{{place.place_name}}</td>
                         <td>{{place.fit_type}}</td>
                         <td>{{place.street}} {{place.city}}, {{place.state}}</td>
+                        <td>{{place.date}}</td>
                         <td>*Friends Going*</td>
                         <td><form action='/going' method='POST' id='liked'>
                             {% csrf_token %}
@@ -314,6 +319,20 @@
                             <input type='hidden' value={{place.id}} name='place'>
                             <button type="submit" class="btn btn-success btn-sm">Going!</button>
                         </form></td>
+                        <td>
+                             <form class='action' action='/edit' method='POST'>
+                                {% csrf_token %}
+                                <input type='hidden' value={{place.id}} name="edit">
+                                <button type='submit' class='btn btn-warning btn-sm'>edit</button>
+                            </form>
+                        </td>
+                        <td><form action='/cancel' method='POST'>
+                            {% csrf_token %}
+                            <input type='hidden' value={{place.id}} name="cancel">
+                            <button type='submit' onclick="return confirm('Are you sure?')" class='btn btn-danger btn-sm'>cancel</button>
+                        </form>
+                        </td>
+                        
                     </tr>
                 </tbody>
                 
@@ -322,7 +341,14 @@
         </div>
         
     </div>
-    <footer></footer>
+    <footer>
+
+    </footer>
+    <script>
+        $( function() {
+          $( "#datepicker" ).datepicker();
+        } );
+    </script>
 </body>
 
 </html>

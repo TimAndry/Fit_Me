@@ -1,5 +1,6 @@
 from django.db import models
-import re
+from django import forms
+import re, datetime
 
 """
 
@@ -76,6 +77,8 @@ class User(models.Model):
     password = models.CharField(max_length = 255)
     #replaces objects call from user.objects.... to user.UserManager().
     objects = UserManager()
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
 
 class Friend(models.Model):
     first_name = models.CharField(max_length = 60)
@@ -83,9 +86,12 @@ class Friend(models.Model):
     email = models.CharField(max_length = 60)
     of_user = models.ManyToManyField(User, related_name = "friends")
     objects = UserManager()
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
 
 class Place(models.Model):
     place_name = models.CharField(max_length = 60)
+    date = models.DateField()
     street = models.CharField(max_length = 60)
     city = models.CharField(max_length = 60)
     state = models.CharField(max_length = 2)
@@ -93,4 +99,7 @@ class Place(models.Model):
     fit_type = models.CharField(max_length = 60)
     desc = models.TextField(max_length = 60)
     is_going = models.ManyToManyField(User, related_name = "this_place")
+    friend_going = models.ManyToManyField(Friend, related_name = "that_place")
     objects = UserManager()
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)

@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import *
 import re, bcrypt
-
+from django.db.models import Q
+#added q import for easier queryset management
 """
 
 A SHORT LIST OF REGULAR EXPRESSIONS
@@ -87,7 +88,8 @@ def user(request, user_id):
     place = Place.objects.all()
     #gets a list of places
 
-    follow = Friend.objects.all()
+    follow = Friend.objects.filter(~Q(of_user = request.session['user_id']))
+
     #gets a list of all the users (later i'll use this to create a list of suggested users like User.objects.filter(some filter)
 
     friends = Friend.objects.filter(of_user = request.session['user_id'])
@@ -115,7 +117,7 @@ def addworkout(request):
             messages.error(request, result[key], extra_tags = key)
         return redirect('user/' + str(request.session['user_id']))
     else:
-        Place.objects.create(place_name = request.POST['place_name'], street = request.POST['street'], city = request.POST['city'], state = request.POST['state'], zip_code = request.POST['zip_code'], fit_type = request.POST['fit_type'], desc = request.POST['description'])
+        Place.objects.create(place_name = request.POST['place_name'], street = request.POST['street'], city = request.POST['city'], state = request.POST['state'], zip_code = request.POST['zip_code'], fit_type = request.POST['fit_type'], desc = request.POST['description'], date = request.POST['date'])
     return redirect('user/' + str(request.session['user_id']))
 
 
@@ -133,6 +135,19 @@ def follow(request):
     of_user.friends.add(friend)
     return redirect('user/' + str(request.session['user_id']))
 
+def edit(request):
+    if request.method == 'POST':
+        request.session['edit'] = Place.objects.get(id = request.POST['edit']).id
+        return redirect('/update')
+
+def update(request):
+
+    return render(request, 'login_app/edit.html')
+
+def cancel(request):
+    cancel = Place.objects.get(id = request.POST['cancel'])
+    cancel.delete()
+    return redirect('user/' + str(request.session['user_id']))
 def logout(request):
     request.session.clear()
     return redirect('/')
