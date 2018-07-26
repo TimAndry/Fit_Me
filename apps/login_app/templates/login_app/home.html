@@ -4,14 +4,36 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Welcome to Fit-me</title>
+    <title>Welcome to FitMe</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script src="main.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
+    <style>
+    #topbar {
+      border: 4px solid black;
+      padding: 7px;
+    }
+    #topbar li {
+      display: inline;
+    }
+    </style>
 </head>
 
 <body>
+    <div id="topbar">
+        <ul>
+            <li>Welcome {{ user.first_name }}</li>
+            <li>
+                <a href="/user/{{ user.id }}">My account</a>
+            </li>
+            <li>
+                <a href="/logout" method="POST">
+                    <input type="submit" value="Logout">
+                </a>
+            </li>
+        </ul>
+    </div>
     <h2>Upcoming workouts</h2>
     <!-- Be sure to come back and adjust form routing -->
     <form action="/" method="POST">
@@ -74,12 +96,36 @@
     <div id="Suggested Meets">
         <h2>My Suggested Meets</h2>
         <fieldset>
+          {% for friends in friends %}
+          {{ friends }}
+          {% endfor %}
             <!-- for loop here; manyToMany between users and friends; loop to populate friends' meets -->
         </fieldset>
     </div>
     <div id="Available Meets">
         <h2>Available Meets</h2>
         <fieldset>
+          <table>
+          <tr>
+            <th><b>Venue</b></th>
+            <th><b>Type of workout</b></th>
+            <th><b>Description</b></th>
+            <th><b>Location</b></th>
+            <th><b>Actions</b></th>
+          </tr>
+          {% for place in place %}
+          <tr>
+            <td>{{ place.place_name }}</td>
+            <td>{{ place.fit_type }}</td>
+            <td>{{ place.desc }}</td>
+            <td>{{ place.street }} {{ place.city }} {{ place.state }} {{ place.zip_code }}</td>
+            <td>
+              <a href="">View</a>
+              <a href="">Edit</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
             <!-- populate options from form above -->
         </fieldset>
     </div>

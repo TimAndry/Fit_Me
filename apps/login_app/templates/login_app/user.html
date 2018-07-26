@@ -89,11 +89,36 @@
         #follow{
             overflow:scroll;
         }
+        #topbar {
+            border: 4px solid black;
+            padding: 7px;
+        }
+        #topbar li {
+            display: inline;
+        }
     </style>
 </head>
 
 <body>
     <div id='wrapper'>
+        <div id="topbar">
+            <ul>
+                <li>Welcome {{ user.first_name }}</li>
+                <li>
+                    <a href="/user/{{ user.id }}">My account</a>
+                </li>
+                <li>
+                    <a href="/logout" method="POST">
+                        <input type="submit" value="Logout">
+                    </a>
+                </li>
+                <li>
+                    <a href="/home/{{ user.id }}" method="POST">
+                        <input type="submit" value="Home">
+                    </a>
+                </li>
+            </ul>
+        </div>
         <h2>Follow suggestions</h2><br>
         <div id='follow'>
         {% for follow in follow %}
@@ -109,9 +134,9 @@
         <div id="user">
             <h1 class='messages'>Hello {{user.first_name}},</h1>
             <p>Welcome to your home page</p>
-            <p>first name: {{user.first_name}}</p>
-            <p>last name: {{user.last_name}}</p>
-            <p>email: {{user.email}}</p>
+            <p><b>first name:</b> {{user.first_name}}</p>
+            <p><b>last name:</b> {{user.last_name}}</p>
+            <p><b>email:</b> {{user.email}}</p>
             <br>
             <h4 class="messages">Following</h4>
             {% for friends in friends %}
@@ -189,7 +214,7 @@
                 <div class="my-1-sm">
                     <label class="mr-sm-2" for="inlineFormCustomSelect">State</label>
                     <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="state">
-                      <option value="1">One</option>
+                      <option value="Illinois">Illinois</option>
                       <option value="2">Two</option>
                       <option value="3">Three</option>
                       <option value="1">One</option>
