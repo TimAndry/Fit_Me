@@ -69,6 +69,14 @@ def login(request):
         messages.error( request, 'This password email combination was not found', extra_tags = 'em2ail')
     return redirect('/')
 
+# def home(request, id):
+#     curr_user = User.objects.get(id=request.session['user_id'])
+#     all_places = Place.objects.all()
+#     context = {
+#         'user':curr_user,
+#         'place':all_places,
+#     }
+#     return render(request, 'login_app/home.html', context)
 
 def user(request, user_id):
     user = User.objects.get(id = request.session['user_id'])
@@ -122,3 +130,7 @@ def follow(request):
     print(of_user.first_name, friend.first_name)
     of_user.friends.add(friend)
     return redirect('user/' + str(request.session['user_id']))
+
+# def logout(request):
+#     request.session.clear()
+#     return redirect('/')
