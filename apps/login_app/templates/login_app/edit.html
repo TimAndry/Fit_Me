@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=for, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>FitMe {{user.first_name}} {{user.last_name}}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=for, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> 
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B"
+        crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div id = "wrapper">
+        <div id = "edit_form">
+                <div id="edit_workout">
+                    <h3>Add a new workout</h3>
+                    <form action='/change' method='POST'>
+                        {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="place_name">Name of the place of workout</label>
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if 'place_name' in message.tags %}
+                                <p class = 'messages'> {{message}} </p>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                            <input name="place_name" type="text" class="form-control form-control-sm" id="place_name">
+                        </div>
+                        
+                        <div class="form-group">
+                                <label class="mr-sm-2" for="inlineFormCustomSelect">Type of workout</label>
+                                <select name = "fit_type" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                  <option value="1">One</option>
+                                  <option value="2">Two</option>
+                                  <option value="3">Three</option>
+                                  <option value="1">One</option>
+                                  <option value="2">Two</option>
+                                  <option value="3">Three</option>
+                                  <option value="1">One</option>
+                                  <option value="2">Two</option>
+                                  <option value="3">Three</option>
+                                  <option value="3">Three</option>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="mr-sm-2" for="date">Event Date</label><br>
+                            <input type="date"  name="date">
+                        </div> 
+                        <br>
+                        <h4>Where is this workout</h4>
+        
+                        <div class="form-group">
+                            <label for="street">Street address</label>
+                            {% if messages %}
+                            {% for message in messages %}
+                                {% if 'street' in message.tags %}
+                                <p class = 'messages'> {{message}} </p>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                            <input name="street" type="text" class="form-control form-control-sm" id="street">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            {% if messages %}
+                            {% for message in messages %}
+                                {% if 'city' in message.tags %}
+                                <p class = 'messages'> {{message}} </p>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                            <input name="city" type="text" class="form-control form-control-sm" id="exampleInputEmail1">
+                        </div>
+        
+                        <div class="my-1-sm">
+                            <label class="mr-sm-2" for="inlineFormCustomSelect">State</label>
+                            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" name="state">
+                              <option value="Illinois">Illinois</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="1">One</option>
+                              <option value="2">Two</option>
+                              <option value="3">Three</option>
+                              <option value="3">Three</option>
+                            </select>
+                        </div>
+                          
+                        <div class="form-group">
+                            <label for="zip_code">Zip Code</label>
+                            {% if messages %}
+                            {% for message in messages %}
+                                {% if 'zip_code' in message.tags %}
+                                <p class = 'messages'> {{message}} </p>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                            <input name="zip_code" type="text" class="form-control form-control-sm" id="exampleInputEmail1">
+                        </div>
+                        <br>
+                        <h4 for="Textarea">Describe the workout</h4>
+                        {% if messages %} 
+                        {% for message in messages %} 
+                            {% if 'description' in message.tags %}
+                                <p class='messages'> {{message}} </p>
+                                {% endif %} 
+                            {% endfor %} 
+                        {% endif %}
+                        <textarea name='description' class="form-control" id="description" rows="3"></textarea>
+                        <br>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        
+                        
+                    </form>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

@@ -5,104 +5,355 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>We are what we do | fitMe</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <style>
+        body {
+            width: 100%;
+        }
+
         #wrapper {
             margin: auto;
             width: 50%;
             margin-top: 100px;
         }
-        
-        #register{
+
+        #register {
             margin: auto;
             display: inline-block;
             width: 35%;
         }
 
-        #login{
+        #places_table {
+            margin: auto;
+            width: 80%;
+            margin-top: 80px;
+        }
+
+        /* #login {
             margin: auto;
             display: inline-block;
             vertical-align: top;
             width: 35%;
             margin-left: 28%;
-        }
+        } */
 
         .messages {
             color: red;
+        }
+
+        nav {
+            width: 100%;
+            height: 100px;
+            background-color: #0b98de;
+        }
+
+        #logo img {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-left: 40px;
+            padding-right: 40px;
+            margin-right: 10px;
+            margin-block-start: 50%;
+            width: 250px;
+            height: 100px;
+        }
+
+        input[type=text],
+        input[type=password] {
+            width: 30%;
+            padding: 14px 20px 12px 12px;
+            margin: 10px 26px 20px 20px;
+            display: block;
+            box-align: center;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        /* Set a style for all buttons */
+
+        #signup {
+            float: right;
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 5px;
+            margin: 20px 20px;
+            border: none;
+            cursor: pointer;
+            width: 10%;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 3%;
+        }
+
+        #login {
+            position: absolute;
+            float: left;
+            top: 0;
+            right: 5;
+            background-color: darkgray;
+            color: white;
+            padding: 5px 5px;
+            margin: 20px 20px;
+            border: none;
+            cursor: pointer;
+            width: 10%;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 3%;
+            margin-left: 75%;
+        }
+
+        button:hover {
+            opacity: 0.8;
+
+        }
+
+        /* Center the image and position the close button */
+
+        .imgcontainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+            position: relative;
+        }
+
+        /* The Modal (background) */
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        /* Modal Content Box */
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 4% auto 15% auto;
+            border: 1px solid #888;
+            width: 37%;
+            padding-bottom: 30px;
+            align-self: center;
+        }
+
+        .close {
+            position: absolute;
+            right: 25px;
+            top: 0;
+            color: #000;
+            font-size: 35px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: red;
+            cursor: pointer;
+        }
+
+        .footer {
+            bottom: 0;
+            height: 80px;
+            min-width: 150%;
+            background-color: rgb(51, 48, 48);
+            color: white;
+            text-align: center;
+            padding-top: 40px;
+            margin-top: 20%;
+            margin-left: -20%;
+        }
+
+        .heroimage img {
+            background-size: cover;
+            width: 100%;
+            position: static;
+            height: 400px;
+        }
+
+
+        h2 {
+            color: darkgray;
+            text-align: center;
+            width: 100%;
+            padding-top: 10px;
+            margin-top: 5%;
+        }
+
+        h3 {
+            position: absolute;
+            color: whitesmoke;
+            float: right;
+            width: 100%;
+            text-align: center;
+            font-family: verdana;
+            margin-top: 5%;
+            font-size: 30pt;
         }
     </style>
 </head>
 
 <body>
-    <div id='wrapper'>
-        <p class='messages'>{{request.session.success}}</p>
+    <nav>
+        <a id="logo" href="#">
+            {% load static %}
+            <img src="{% static 'login_app/img/fitMe (3).png' %}">
+        </a>
+
+        <div id="signup" button onclick="document.getElementById('modal-wrapper').style.display='block'">
+            Sign Up</button>
+        </div>
+
+        <div id="login" button onclick="document.getElementById('modal-wrapper').style.display='block'">
+            Login</button>
+        </div>
+
+    </nav>
+
+    <h3>Let's Work Out Together!</h3>
+
+    <div id="modal-wrapper" class="modal">
+
+        <div class="modal-content animate">
+
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
+            <!-- <img src="1.png" alt="Avatar" class="avatar"> -->
+                <h1 style="text-align:center">Please Login</h1>
+            </div>
+
+            <form action='/login' method='POST'>
+                {% csrf_token %}
+            <div class="container">
+                <input type="email" placeholder="Enter Username" name="email">
+                <input type="password" placeholder="Enter Password" name="pass2word">
+                <button type="submit">Login</button>
+                <a href="#" style="text-decoration:none; float:left; margin-right:34px; margin-top:26px;">Forgot Password ?</a>
+            </div>
+        </form>
+        </div>
+
+    </div>
+
+    <!-- <div id='login'>
+            <h2>Login</h2>
+            <form action='/login' method='POST'>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    {% if messages %} {% for message in messages %} {% if 'em2ail' in message.tags %}
+                    <p class='messages'> {{message}} </p>
+                    {% endif %} {% endfor %} {% endif %}
+                    <input name="em2ail" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    {% if messages %} {% for message in messages %} {% if 'pass2word' in message.tags %}
+                    <p class='messages'> {{message}} </p>
+                    {% endif %} {% endfor %} {% endif %}
+                    <input name='pass2word' type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form> -->
+
+    <div id="modal-register" class="modal">
+
+        <form class="modal-content animate" action="/login">
+
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
+                <!-- <img src="1.png" alt="Avatar" class="avatar"> -->
+                <h1 style="text-align:center">Please Sign Up</h1>
+            </div>
+
+            <div class="container">
+                <input type="email" placeholder="Enter Username" name="em2ail">
+                <input type="password" placeholder="Enter Password" name="pass2word">
+                <button type="submit">Sign Up</button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <script>
+
+        var modal = document.getElementById('modal-wrapper');
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+    <div class="heroimage">
+        {% load static %}
+        <img src="{% static 'login_app/img/banner3.png' %}">
+    </div>
+
+    <div class="container">
+        <h2>Our Favorite Workouts</h2>
+    </div>
+
+     <div id='wrapper'>
+        <!--<p class='messages'>{{request.session.success}}</p>
         <div id='register'>
             <h2>Register</h2>
             <form action='/registration' method='POST'>
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="firstname">First Name</label>
-                {% if messages %}
-                    {% for message in messages %}
-                        {% if 'fname' in message.tags %}
-                        <p class = 'messages'> {{message}} </p>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
+                    {% if messages %} {% for message in messages %} {% if 'fname' in message.tags %}
+                    <p class='messages'> {{message}} </p>
+                    {% endif %} {% endfor %} {% endif %}
                     <input name="fname" type="text" class="form-control" id="fname" aria-describedby="emailHelp" placeholder="First Name">
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">Last Name</label>
-                    {% if messages %}
-                    {% for message in messages %}
-                        {% if 'lname' in message.tags %}
-                        <p class = 'messages'> {{message}} </p>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
+                    {% if messages %} {% for message in messages %} {% if 'lname' in message.tags %}
+                    <p class='messages'> {{message}} </p>
+                    {% endif %} {% endfor %} {% endif %}
                     <input name="lname" type="text" class="form-control" id="lname" aria-describedby="emailHelp" placeholder="Last Name">
                 </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
-                    {% if messages %}
-                    {% for message in messages %}
-                        {% if 'email' in message.tags %}
-                        <p class = 'messages'> {{message}} </p>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
+                    {% if messages %} {% for message in messages %} {% if 'email' in message.tags %}
+                    <p class='messages'> {{message}} </p>
+                    {% endif %} {% endfor %} {% endif %}
                     <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
-                    {% if messages %}
-                    {% for message in messages %}
-                        {% if 'password' in message.tags %}
-                        <p class = 'messages'> {{message}} </p>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
+                    {% if messages %} {% for message in messages %} {% if 'password' in message.tags %}
+                    <p class='messages'> {{message}} </p>
+                    {% endif %} {% endfor %} {% endif %}
                     <input name='password' type="password" class="form-control" id="exampleInputPassword1">
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Confirm Password</label>
-                    {% if messages %}
-                    {% for message in messages %}
-                        {% if 'check_password' in message.tags %}
-                        <p class = 'messages'> {{message}} </p>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
+                    {% if messages %} {% for message in messages %} {% if 'check_password' in message.tags %}
+                    <p class='messages'> {{message}} </p>
+                    {% endif %} {% endfor %} {% endif %}
                     <input name="check_password" type="password" class="form-control" id="exampleInputPassword1">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
-
+    -->
 
         <div id='login'>
             <h2>Login</h2>
@@ -110,31 +361,56 @@
                 {% csrf_token %}
                 <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
-                    {% if messages %}
-                    {% for message in messages %}
-                        {% if 'em2ail' in message.tags %}
-                        <p class = 'messages'> {{message}} </p>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
+                    {% if messages %} {% for message in messages %} {% if 'em2ail' in message.tags %}
+                    <p class='messages'> {{message}} </p>
+                    {% endif %} {% endfor %} {% endif %}
                     <input name="em2ail" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
                     <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
-                    {% if messages %}
-                    {% for message in messages %}
-                        {% if 'pass2word' in message.tags %}
-                        <p class = 'messages'> {{message}} </p>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
+                    {% if messages %} {% for message in messages %} {% if 'pass2word' in message.tags %}
+                    <p class='messages'> {{message}} </p>
+                    {% endif %} {% endfor %} {% endif %}
                     <input name='pass2word' type="password" class="form-control" id="exampleInputPassword1">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </div>
+    </div>
+
+    <div id="places_table">
+        <table class="table table-sm table-hover table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type of workout</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Fitmes Going</th>
+                </tr>
+            </thead>
+            {% for place in place %}
+            <tbody>
+                <tr>
+                    <td>{{place.place_name}}</td>
+                    <td>{{place.fit_type}}</td>
+                    <td>{{place.street}} {{place.city}}, {{place.state}}</td>
+                    <td>{{place.date}}</td>
+                    <td>*Fitmes Going*</td>
+
+                </tr>
+            </tbody>
+
+            {% endfor %}
+        </table>
+
+        <footer class="footer">
+            <p>Created by Ashley, Tim and Nauman</p>
+        </footer>
 </body>
+
+
 
 </html>

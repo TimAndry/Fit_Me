@@ -5,13 +5,10 @@ from .models import *
 import re, bcrypt
 from django.db.models import Q
 from geopy.geocoders import Nominatim
-from geopy import geocoders
-from geopy.exc import GeocoderTimedOut
 #added q import for easier queryset management
 
 
 geolocator = Nominatim()
-g = geocoders.GoogleV3(api_key='AIzaSyAlh4cKb_0NhmjwAdrKk9xoGa1Usm7LwZQ')
 
 #use regualr expression to validate email
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
@@ -21,11 +18,7 @@ NAME_REGEX = re.compile(r'[0-9]')
 PASSWORD_REGEX = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)')
 
 def index(request):
-    place = Place.objects.all()
-    context  = {
-        'place': place
-    }
-    return render(request, 'login_app/index.html', context)
+    return render(request, 'login_app/index.html')
 
 def registration(request):
     result = User.objects.validate_registration(request.POST)
@@ -48,9 +41,9 @@ def registration(request):
     return redirect('/')
 
 def login(request):
-    user = User.objects.filter(email = request.POST['email'])
+    user = User.objects.filter(email = request.POST['em2ail'])
     if len(user) == 0:
-        messages.error(request, 'This user does not exist', extra_tags = 'email')
+        messages.error(request, 'This user does not exist', extra_tags = 'em2ail')
         return redirect('/')
     else:
         user = user.first()
@@ -60,28 +53,35 @@ def login(request):
         messages.error( request, 'enter a valid password', extra_tags = 'pass2word')
     if valid_pass:
         request.session['user_id'] = user.id
-        messages.error( request, user.first_name + ' is now logged in', extra_tags = 'email')
+        messages.error( request, user.first_name + ' is now logged in', extra_tags = 'em2ail')
         print(user.first_name)
         return redirect('user/' + str(request.session['user_id']))
     else:
-        messages.error( request, 'This password email combination was not found', extra_tags = 'email')
+        messages.error( request, 'This password email combination was not found', extra_tags = 'em2ail')
     return redirect('/')
 
 def home(request, user_id):
     curr_user = User.objects.get(id = request.session['user_id'])
     all_places = Place.objects.all()
     friends = Friend.objects.filter(of_user = request.session['user_id'])
+    street = Place.objects.get(id = 2).street
+    city = Place.objects.get(id = 2).city
+    state = Place.objects.get(id = 2).state
+    location = str(street) + ", " + str(city) + ", "+  str(state)
+
+    # lat = getlatlong.latitude
+    # longi =  getlatlong.longitude
+    # lat = getlatlong.latitude
+    # print(float(lat), float(longi))
     latlong = Place.objects.get(id = 9)
-    my_places = Place.objects.filter(is_going = request.session['user_id'])
-    other_places = Place.objects.filter(~Q(is_going = request.session['user_id']))
-    print(other_places)
+
+   
+
     context = {
         'user':curr_user,
         'place':all_places,
         'friends': friends,
         'latlong': latlong,
-        'my_places': my_places,
-        'other_places': other_places,
     }
     return render(request, 'login_app/home.html', context)
 
@@ -123,17 +123,12 @@ def addworkout(request):
             messages.error(request, result[key], extra_tags = key)
         return redirect('user/' + str(request.session['user_id']))
     else:
-        street = str(request.POST['street'])
-        city =  str(request.POST['city'])
-        state =  str(request.POST['state'])
-        lat = street + ' ' + city + ' ' + state
-        lat = g.geocode(lat)
+        lat = geolocator.geocode(str(request.POST['street']) + ' ' + str(request.POST['city']) + ', ' + str(request.POST['state']))
         latcord = str(lat.latitude)
         arr=[]
         arr.append(latcord)
         print(arr[0])
-        longi = (str(request.POST['street']) + ' ' + str(request.POST['city']) + ', ' + str(request.POST['state']))
-        longi = g.geocode(longi)
+        longi = geolocator.geocode(str(request.POST['street']) + ' ' + str(request.POST['city']) + ', ' + str(request.POST['state']))
         longcord = str(longi.longitude)
         arr2 = []
         arr2.append(longcord)
@@ -146,10 +141,8 @@ def addworkout(request):
 
 def going(request):
     is_going = User.objects.get(id = request.POST['user'])
-    friend_going = Friend.objects.get(id = request.POST['user'])
     this_place = Place.objects.get(id = request.POST['place'])
     is_going.this_place.add(this_place)
-    friend_going.that_place.add(this_place)
     return redirect('user/' + str(request.session['user_id']))
 
 
@@ -193,34 +186,9 @@ def change(request):
 def cancel(request):
     cancel = Place.objects.get(id = request.POST['cancel'])
     cancel.delete()
-    if 'user_id' in request.session:
-        return redirect('user/' + str(request.session['user_id']))
-    else: return redirect('/')
+    return redirect('user/' + str(request.session['user_id']))
+
 
 def logout(request):
     request.session.clear()
     return redirect('/')
-    
-
-def showplace(request, going_id):
-    friend = Friend.objects.filter(that_place = going_id)
-    print(friend)
-    user = User.objects.get(id = request.session['user_id'])
-    here = Place.objects.get(id = going_id)
-    context ={
-        'friend': friend,
-        'user': user,
-        'here': here,
-    } 
-    return render(request, 'login_app/showplace.html', context)
-
-def showuser(request, user_id):
-    user = User.objects.get(id = user_id)
-    places = Place.objects.filter(is_going = user_id)
-    follow = Friend.objects.filter(of_user = user_id)
-    context = {
-        'user': user,
-        'places': places,
-        'follow': follow,
-    }
-    return render(request, 'login_app/showuser.html', context)

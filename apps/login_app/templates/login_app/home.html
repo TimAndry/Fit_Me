@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Welcome to FitMe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+
+    #topbar {
+      border: 4px solid black;
+      padding: 7px;
+    }
+    #topbar li {
+      display: inline;
+    }
+    #map{
+      height:400px;
+      width:100%;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="topbar">
+        <ul>
+            <li>Welcome {{user.first_name}}</li>
+            <li>
+                <a href="/user/{{user.id}}">My account</a>
+            </li>
+            <li>
+                <a href="/logout" method="POST">
+                    <input type="submit" value="Logout">
+                </a>
+            </li>
+        </ul>
+    </div>
+    <h2>Upcoming workouts</h2>
+    <form action="/" method="POST">
+        <p>Type of workout:</p>
+        <input type="checkbox" name="type" value="Yoga">Yoga/Meditative
+        <input type="checkbox" name="type" value="Walking">Walking
+        <input type="checkbox" name="type" value="Running">Running
+        <input type="checkbox" name="type" value="Strength">Strength
+        <input type="checkbox" name="type" value="Hiking">Hiking
+        <input type="checkbox" name="type" value="Inthesnow">Snowfun
+        <input type="checkbox" name="type" value="Diet">Diet & Nutrition
+        <p>
+            <input type="datetime-local" name="datetime" value="2018-00-12T19:30" min="2018-00-07T00:00" max="2018-00-14T00:00" />
+        </p>
+        <p>Location:
+            <input type="text" name="location">
+        </p>
+    </form>
+    <div id="map" style="width:100%;height:500px">
+        <script>
+            function initMap() {
+                // Map options
+                var options = {
+                    zoom: 10,
+                    center: { lat: 41.8781, lng: -87.6298 }
+                }
+                // New map
+                var map = new google.maps.Map(document.getElementById('map'), options);
+
+                // Listen for click on map
+                google.maps.event.addListener(map, 'click', function (event) {
+                    // Add marker
+                    //addMarker({ coords: event.latLng });
+                });
+                var markers = [
+                {% for my_places in my_places %}
+                {
+                coords: { lat: {{my_places.getlat}}, lng: {{my_places.getlong}} },
+                iconImage: 'https://img00.deviantart.net/f079/i/2005/119/7/0/dance_little_man__dance__by_xduckeh.gif',
+                content: '<a href = /showplace/{{my_places.id}}><h3>{{my_places.place_name}}</h3></a><h4>{{my_places.street}}</h4><p>{{my_places.city}}</p><p>{{my_places.state}}, {{my_places.zip_code}}</p>'
+                },
+                {% endfor %}
+                
+                {% for other_places in other_places %}
+                {
+                coords: { lat: {{other_places.getlat}}, lng: {{other_places.getlong}} },
+                iconImage: 'https://orig00.deviantart.net/40b7/f/2009/167/9/f/icon_03_by_eyou94.gif',
+                content: '<a href =/showplace/{{other_places.id}}><h3>{{other_places.place_name}}</h3></a><h4>{{other_places.street}}</h4><p>{{other_places.city}}</p><p>{{other_places.state}}, {{other_places.zip_code}}</p>'
+                },
+                {% endfor %}
+                
+                
+                ]
+                
+               
+                
+            for (var i = 0; i < markers.length; i++) {
+                addMarker(markers[i]);
+            }
+            
+            function addMarker(props) {
+                var marker = new google.maps.Marker({
+                    position: props.coords,
+                    map: map,
+                });
+
+                //   // Check for customicon
+                if (props.iconImage) {
+                    //     // Set icon image
+                    marker.setIcon(props.iconImage);
+                }
+
+                //   // Check content
+                if (props.content) {
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: props.content
+                    });
+
+                    marker.addListener('click', function () {
+                        infoWindow.open(map, marker);
+                    });
+                }
+            }
+            }
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS_cedue3vzgmFqik8tHHOFirhkWdKwNc&callback=initMap">
+        </script>
+
+    </div>
+    <div id="Suggested Meets">
+        <h2>My Suggested Meets</h2>
+        <fieldset>
+
+          {% for friends in friends %}
+          <p><a href ="">{{ friends.first_name }} {{ friends.last_name}}</a></p>
+          {% endfor %}
+
+            <!-- for loop here; manyToMany between users and friends; loop to populate friends' meets -->
+        </fieldset>
+    </div>
+    <div id="Available Meets">
+        <h2>Available Meets</h2>
+        <fieldset>
+            <table>
+                <tr>
+                    <th>
+                        <b>Venue</b>
+                    </th>
+                    <th>
+                        <b>Type of workout</b>
+                    </th>
+                    <th>
+                        <b>Description</b>
+                    </th>
+                    <th>
+                        <b>Location</b>
+                    </th>
+                    <th>
+                        <b>Actions</b>
+                    </th>
+                </tr>
+                {% for place in place %}
+                <tr>
+                    <td>{{ place.place_name }}</td>
+                    <td>{{ place.fit_type }}</td>
+                    <td>{{ place.desc }}</td>
+                    <td>{{ place.street }} {{ place.city }} {{ place.state }} {{ place.zip_code }}</td>
+                    <td>
+                        <p>{{place.getlatlong}}</p>
+                        <a href="">View</a>
+                        <a href="">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <!-- populate options from form above -->
+        </fieldset>
+    </div>
+</body>
+
+</html>
