@@ -53,12 +53,12 @@
             <input type="text" name="location">
         </p>
     </form>
-    <div id="map" style="width:500px;height:500px">
+    <div id="map" style="width:100%;height:500px">
         <script>
             function initMap() {
                 // Map options
                 var options = {
-                    zoom: 8,
+                    zoom: 10,
                     center: { lat: 41.8781, lng: -87.6298 }
                 }
                 // New map
@@ -67,21 +67,34 @@
                 // Listen for click on map
                 google.maps.event.addListener(map, 'click', function (event) {
                     // Add marker
-                    addMarker({ coords: event.latLng });
+                    //addMarker({ coords: event.latLng });
                 });
                 var markers = [
                 {% for my_places in my_places %}
                 {
                 coords: { lat: {{my_places.getlat}}, lng: {{my_places.getlong}} },
                 iconImage: 'https://img00.deviantart.net/f079/i/2005/119/7/0/dance_little_man__dance__by_xduckeh.gif',
-                content: '<h3>{{my_places.place_name}}</h3><h4>{{my_places.street}}</h4><p>{{my_places.city}}</p><p>{{my_places.state}}, {{my_places.zip_code}}</p>'
+                content: '<a href = /showplace/{{my_places.id}}><h3>{{my_places.place_name}}</h3></a><h4>{{my_places.street}}</h4><p>{{my_places.city}}</p><p>{{my_places.state}}, {{my_places.zip_code}}</p>'
                 },
                 {% endfor %}
-            ]
-
+                
+                {% for other_places in other_places %}
+                {
+                coords: { lat: {{other_places.getlat}}, lng: {{other_places.getlong}} },
+                iconImage: 'https://orig00.deviantart.net/40b7/f/2009/167/9/f/icon_03_by_eyou94.gif',
+                content: '<a href =/showplace/{{other_places.id}}><h3>{{other_places.place_name}}</h3></a><h4>{{other_places.street}}</h4><p>{{other_places.city}}</p><p>{{other_places.state}}, {{other_places.zip_code}}</p>'
+                },
+                {% endfor %}
+                
+                
+                ]
+                
+               
+                
             for (var i = 0; i < markers.length; i++) {
                 addMarker(markers[i]);
             }
+            
             function addMarker(props) {
                 var marker = new google.maps.Marker({
                     position: props.coords,

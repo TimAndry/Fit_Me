@@ -226,23 +226,24 @@
 
     <div id="modal-wrapper" class="modal">
 
-        <form class="modal-content animate" action="/action_page.php">
+        <div class="modal-content animate">
 
             <div class="imgcontainer">
                 <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
-                <!-- <img src="1.png" alt="Avatar" class="avatar"> -->
+            <!-- <img src="1.png" alt="Avatar" class="avatar"> -->
                 <h1 style="text-align:center">Please Login</h1>
             </div>
 
             <form action='/login' method='POST'>
+                {% csrf_token %}
             <div class="container">
-                <input type="text" placeholder="Enter Username" name="uname">
-                <input type="password" placeholder="Enter Password" name="psw">
+                <input type="email" placeholder="Enter Username" name="email">
+                <input type="password" placeholder="Enter Password" name="pass2word">
                 <button type="submit">Login</button>
                 <a href="#" style="text-decoration:none; float:left; margin-right:34px; margin-top:26px;">Forgot Password ?</a>
             </div>
         </form>
-        </form>
+        </div>
 
     </div>
 
@@ -270,7 +271,7 @@
 
     <div id="modal-register" class="modal">
 
-        <form class="modal-content animate" action="/action_page.php">
+        <form class="modal-content animate" action="/login">
 
             <div class="imgcontainer">
                 <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
@@ -279,8 +280,8 @@
             </div>
 
             <div class="container">
-                <input type="text" placeholder="Enter Username" name="email">
-                <input type="password" placeholder="Enter Password" name="password">
+                <input type="email" placeholder="Enter Username" name="em2ail">
+                <input type="password" placeholder="Enter Password" name="pass2word">
                 <button type="submit">Sign Up</button>
             </div>
 
@@ -307,9 +308,8 @@
         <h2>Our Favorite Workouts</h2>
     </div>
 
-
      <div id='wrapper'>
-        <p class='messages'>{{request.session.success}}</p>
+        <!--<p class='messages'>{{request.session.success}}</p>
         <div id='register'>
             <h2>Register</h2>
             <form action='/registration' method='POST'>
@@ -353,7 +353,7 @@
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
-
+    -->
 
         <div id='login'>
             <h2>Login</h2>
@@ -399,28 +399,6 @@
                     <td>{{place.street}} {{place.city}}, {{place.state}}</td>
                     <td>{{place.date}}</td>
                     <td>*Fitmes Going*</td>
-                    <td>
-                        <form action='/going' method='POST' id='liked'>
-                            {% csrf_token %}
-                            <input type='hidden' value={{user.id}} name='user'>
-                            <input type='hidden' value={{place.id}} name='place'>
-                            <button type="submit" class="btn btn-success btn-sm">Going!</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form class='action' action='/edit' method='POST'>
-                            {% csrf_token %}
-                            <input type='hidden' value={{place.id}} name="edit">
-                            <button type='submit' class='btn btn-warning btn-sm'>edit</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action='/cancel' method='POST'>
-                            {% csrf_token %}
-                            <input type='hidden' value={{place.id}} name="cancel">
-                            <button type='submit' onclick="return confirm('Are you sure?')" class='btn btn-danger btn-sm'>cancel</button>
-                        </form>
-                    </td>
 
                 </tr>
             </tbody>

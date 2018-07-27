@@ -5,10 +5,13 @@ from .models import *
 import re, bcrypt
 from django.db.models import Q
 from geopy.geocoders import Nominatim
+from geopy import geocoders
+from geopy.exc import GeocoderTimedOut
 #added q import for easier queryset management
 
 
 geolocator = Nominatim()
+g = geocoders.GoogleV3(api_key='AIzaSyAlh4cKb_0NhmjwAdrKk9xoGa1Usm7LwZQ')
 
 #use regualr expression to validate email
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
@@ -18,7 +21,11 @@ NAME_REGEX = re.compile(r'[0-9]')
 PASSWORD_REGEX = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)')
 
 def index(request):
-    return render(request, 'login_app/index.html')
+    place = Place.objects.all()
+    context  = {
+        'place': place
+    }
+    return render(request, 'login_app/index.html', context)
 
 def registration(request):
     result = User.objects.validate_registration(request.POST)
@@ -41,9 +48,9 @@ def registration(request):
     return redirect('/')
 
 def login(request):
-    user = User.objects.filter(email = request.POST['em2ail'])
+    user = User.objects.filter(email = request.POST['email'])
     if len(user) == 0:
-        messages.error(request, 'This user does not exist', extra_tags = 'em2ail')
+        messages.error(request, 'This user does not exist', extra_tags = 'email')
         return redirect('/')
     else:
         user = user.first()
@@ -53,11 +60,11 @@ def login(request):
         messages.error( request, 'enter a valid password', extra_tags = 'pass2word')
     if valid_pass:
         request.session['user_id'] = user.id
-        messages.error( request, user.first_name + ' is now logged in', extra_tags = 'em2ail')
+        messages.error( request, user.first_name + ' is now logged in', extra_tags = 'email')
         print(user.first_name)
         return redirect('user/' + str(request.session['user_id']))
     else:
-        messages.error( request, 'This password email combination was not found', extra_tags = 'em2ail')
+        messages.error( request, 'This password email combination was not found', extra_tags = 'email')
     return redirect('/')
 
 def home(request, user_id):
@@ -66,13 +73,15 @@ def home(request, user_id):
     friends = Friend.objects.filter(of_user = request.session['user_id'])
     latlong = Place.objects.get(id = 9)
     my_places = Place.objects.filter(is_going = request.session['user_id'])
-
+    other_places = Place.objects.filter(~Q(is_going = request.session['user_id']))
+    print(other_places)
     context = {
         'user':curr_user,
         'place':all_places,
         'friends': friends,
         'latlong': latlong,
         'my_places': my_places,
+        'other_places': other_places,
     }
     return render(request, 'login_app/home.html', context)
 
@@ -118,13 +127,13 @@ def addworkout(request):
         city =  str(request.POST['city'])
         state =  str(request.POST['state'])
         lat = street + ' ' + city + ' ' + state
-        lat = geolocator.geocode(lat)
+        lat = g.geocode(lat)
         latcord = str(lat.latitude)
         arr=[]
         arr.append(latcord)
         print(arr[0])
         longi = (str(request.POST['street']) + ' ' + str(request.POST['city']) + ', ' + str(request.POST['state']))
-        longi = geolocator.geocode(longi)
+        longi = g.geocode(longi)
         longcord = str(longi.longitude)
         arr2 = []
         arr2.append(longcord)
@@ -184,8 +193,9 @@ def change(request):
 def cancel(request):
     cancel = Place.objects.get(id = request.POST['cancel'])
     cancel.delete()
-    return redirect('user/' + str(request.session['user_id']))
-
+    if 'user_id' in request.session:
+        return redirect('user/' + str(request.session['user_id']))
+    else: return redirect('/')
 
 def logout(request):
     request.session.clear()
