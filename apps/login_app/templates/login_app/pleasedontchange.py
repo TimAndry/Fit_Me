@@ -64,15 +64,24 @@ def home(request, user_id):
     curr_user = User.objects.get(id = request.session['user_id'])
     all_places = Place.objects.all()
     friends = Friend.objects.filter(of_user = request.session['user_id'])
+    street = Place.objects.get(id = 2).street
+    city = Place.objects.get(id = 2).city
+    state = Place.objects.get(id = 2).state
+    location = str(street) + ", " + str(city) + ", "+  str(state)
+
+    # lat = getlatlong.latitude
+    # longi =  getlatlong.longitude
+    # lat = getlatlong.latitude
+    # print(float(lat), float(longi))
     latlong = Place.objects.get(id = 9)
-    my_places = Place.objects.filter(is_going = request.session['user_id'])
+
+   
 
     context = {
         'user':curr_user,
         'place':all_places,
         'friends': friends,
         'latlong': latlong,
-        'my_places': my_places,
     }
     return render(request, 'login_app/home.html', context)
 
@@ -114,17 +123,12 @@ def addworkout(request):
             messages.error(request, result[key], extra_tags = key)
         return redirect('user/' + str(request.session['user_id']))
     else:
-        street = str(request.POST['street'])
-        city =  str(request.POST['city'])
-        state =  str(request.POST['state'])
-        lat = street + ' ' + city + ' ' + state
-        lat = geolocator.geocode(lat)
+        lat = geolocator.geocode(str(request.POST['street']) + ' ' + str(request.POST['city']) + ', ' + str(request.POST['state']))
         latcord = str(lat.latitude)
         arr=[]
         arr.append(latcord)
         print(arr[0])
-        longi = (str(request.POST['street']) + ' ' + str(request.POST['city']) + ', ' + str(request.POST['state']))
-        longi = geolocator.geocode(longi)
+        longi = geolocator.geocode(str(request.POST['street']) + ' ' + str(request.POST['city']) + ', ' + str(request.POST['state']))
         longcord = str(longi.longitude)
         arr2 = []
         arr2.append(longcord)
@@ -137,10 +141,8 @@ def addworkout(request):
 
 def going(request):
     is_going = User.objects.get(id = request.POST['user'])
-    friend_going = Friend.objects.get(id = request.POST['user'])
     this_place = Place.objects.get(id = request.POST['place'])
     is_going.this_place.add(this_place)
-    friend_going.that_place.add(this_place)
     return redirect('user/' + str(request.session['user_id']))
 
 
@@ -190,27 +192,3 @@ def cancel(request):
 def logout(request):
     request.session.clear()
     return redirect('/')
-    
-
-def showplace(request, going_id):
-    friend = Friend.objects.filter(that_place = going_id)
-    print(friend)
-    user = User.objects.get(id = request.session['user_id'])
-    here = Place.objects.get(id = going_id)
-    context ={
-        'friend': friend,
-        'user': user,
-        'here': here,
-    } 
-    return render(request, 'login_app/showplace.html', context)
-
-def showuser(request, user_id):
-    user = User.objects.get(id = user_id)
-    places = Place.objects.filter(is_going = user_id)
-    follow = Friend.objects.filter(of_user = user_id)
-    context = {
-        'user': user,
-        'places': places,
-        'follow': follow,
-    }
-    return render(request, 'login_app/showuser.html', context)

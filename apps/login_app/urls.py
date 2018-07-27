@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^edit$', views.edit),
     url(r'^update$', views.update),
     url(r'^logout$', views.logout),
+    url(r'^showplace/(?P<going_id>\d+)$', views.showplace),
 ]

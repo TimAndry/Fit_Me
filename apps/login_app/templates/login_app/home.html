@@ -10,22 +10,23 @@
     <script src="main.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
     <style>
-    #topbar {
-      border: 4px solid black;
-      padding: 7px;
-    }
-    #topbar li {
-      display: inline;
-    }
+        #topbar {
+            border: 4px solid black;
+            padding: 7px;
+        }
+
+        #topbar li {
+            display: inline;
+        }
     </style>
 </head>
 
 <body>
     <div id="topbar">
         <ul>
-            <li>Welcome {{ user.first_name }}</li>
+            <li>Welcome {{user.first_name}}</li>
             <li>
-                <a href="/user/{{ user.id }}">My account</a>
+                <a href="/user/{{user.id}}">My account</a>
             </li>
             <li>
                 <a href="/logout" method="POST">
@@ -53,79 +54,108 @@
         </p>
     </form>
     <div id="map" style="width:500px;height:500px">
-            <script>
-              var map, infoWindow;
-              function initMap() {
-                map = new google.maps.Map(document.getElementById('map'), {
-                  center: {lat: -34.397, lng: 150.644},
-                  zoom: 6
-                });
-                infoWindow = new google.maps.InfoWindow;
-
-                if (navigator.geolocation) {
-                  navigator.geolocation.getCurrentPosition(function(position) {
-                    var pos = {
-                      lat: position.coords.latitude,
-                      lng: position.coords.longitude
-                    };
-        
-                    infoWindow.setPosition(pos);
-                    infoWindow.setContent('Location found.');
-                    infoWindow.open(map);
-                    map.setCenter(pos);
-                  }, function() {
-                    handleLocationError(true, infoWindow, map.getCenter());
-                  });
-                } else {
-                  handleLocationError(false, infoWindow, map.getCenter());
+        <script>
+            function initMap() {
+                // Map options
+                var options = {
+                    zoom: 8,
+                    center: { lat: 41.8781, lng: -87.6298 }
                 }
-              }
-        
-              function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-                infoWindow.setPosition(pos);
-                infoWindow.setContent(browserHasGeolocation ?
-                                      'Error: The Geolocation service failed.' :
-                                      'Error: Your browser doesn\'t support geolocation.');
-                infoWindow.open(map);
-              }
-            </script>
-            <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS_cedue3vzgmFqik8tHHOFirhkWdKwNc&callback=initMap">
-            </script>
-            </div>
+                // New map
+                var map = new google.maps.Map(document.getElementById('map'), options);
+
+                // Listen for click on map
+                google.maps.event.addListener(map, 'click', function (event) {
+                    // Add marker
+                    addMarker({ coords: event.latLng });
+                });
+                var markers = [
+                {% for my_places in my_places %}
+                {
+                coords: { lat: {{my_places.getlat}}, lng: {{my_places.getlong}} },
+                iconImage: 'https://img00.deviantart.net/f079/i/2005/119/7/0/dance_little_man__dance__by_xduckeh.gif',
+                content: '<h3>{{my_places.place_name}}</h3><h4>{{my_places.street}}</h4><p>{{my_places.city}}</p><p>{{my_places.state}}, {{my_places.zip_code}}</p>'
+                },
+                {% endfor %}
+            ]
+
+            for (var i = 0; i < markers.length; i++) {
+                addMarker(markers[i]);
+            }
+            function addMarker(props) {
+                var marker = new google.maps.Marker({
+                    position: props.coords,
+                    map: map,
+                });
+
+                //   // Check for customicon
+                if (props.iconImage) {
+                    //     // Set icon image
+                    marker.setIcon(props.iconImage);
+                }
+
+                //   // Check content
+                if (props.content) {
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: props.content
+                    });
+
+                    marker.addListener('click', function () {
+                        infoWindow.open(map, marker);
+                    });
+                }
+            }
+            }
+        </script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS_cedue3vzgmFqik8tHHOFirhkWdKwNc&callback=initMap">
+        </script>
+    </div>
     <div id="Suggested Meets">
         <h2>My Suggested Meets</h2>
         <fieldset>
-          {% for friends in friends %}
-          {{ friends }}
-          {% endfor %}
+            {% for friends in friends %}
+            <p>
+                <a href="">{{ friends.first_name }} {{ friends.last_name}}</a>
+            </p>
+            {% endfor %}
             <!-- for loop here; manyToMany between users and friends; loop to populate friends' meets -->
         </fieldset>
     </div>
     <div id="Available Meets">
         <h2>Available Meets</h2>
         <fieldset>
-          <table>
-          <tr>
-            <th><b>Venue</b></th>
-            <th><b>Type of workout</b></th>
-            <th><b>Description</b></th>
-            <th><b>Location</b></th>
-            <th><b>Actions</b></th>
-          </tr>
-          {% for place in place %}
-          <tr>
-            <td>{{ place.place_name }}</td>
-            <td>{{ place.fit_type }}</td>
-            <td>{{ place.desc }}</td>
-            <td>{{ place.street }} {{ place.city }} {{ place.state }} {{ place.zip_code }}</td>
-            <td>
-              <a href="">View</a>
-              <a href="">Edit</a>
-            </td>
-          </tr>
-          {% endfor %}
-        </table>
+            <table>
+                <tr>
+                    <th>
+                        <b>Venue</b>
+                    </th>
+                    <th>
+                        <b>Type of workout</b>
+                    </th>
+                    <th>
+                        <b>Description</b>
+                    </th>
+                    <th>
+                        <b>Location</b>
+                    </th>
+                    <th>
+                        <b>Actions</b>
+                    </th>
+                </tr>
+                {% for place in place %}
+                <tr>
+                    <td>{{ place.place_name }}</td>
+                    <td>{{ place.fit_type }}</td>
+                    <td>{{ place.desc }}</td>
+                    <td>{{ place.street }} {{ place.city }} {{ place.state }} {{ place.zip_code }}</td>
+                    <td>
+                        <p>{{place.getlatlong}}</p>
+                        <a href="">View</a>
+                        <a href="">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
             <!-- populate options from form above -->
         </fieldset>
     </div>

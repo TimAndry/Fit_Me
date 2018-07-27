@@ -100,6 +100,8 @@ class Place(models.Model):
     desc = models.TextField(max_length = 60)
     is_going = models.ManyToManyField(User, related_name = "this_place")
     friend_going = models.ManyToManyField(Friend, related_name = "that_place")
+    getlat = models.CharField(max_length = 1000)
+    getlong = models.CharField(max_length = 1000)
     objects = UserManager()
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
