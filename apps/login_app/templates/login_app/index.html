@@ -26,6 +26,12 @@
             width: 35%;
         }
 
+        #places_table {
+            margin: auto;
+            width: 80%;
+            margin-top: 80px;
+        }
+
         /* #login {
             margin: auto;
             display: inline-block;
@@ -73,8 +79,8 @@
         #signup {
             float: right;
             position: absolute;
-            top:0;
-            right:0;
+            top: 0;
+            right: 0;
             background-color: #4CAF50;
             color: white;
             padding: 5px 5px;
@@ -84,13 +90,13 @@
             width: 10%;
             font-size: 14px;
             text-align: center;
-            margin-top:3%;
+            margin-top: 3%;
         }
 
         #login {
             position: absolute;
             float: left;
-            top:0;
+            top: 0;
             right: 5;
             background-color: darkgray;
             color: white;
@@ -101,8 +107,8 @@
             width: 10%;
             font-size: 14px;
             text-align: center;
-            margin-top:3%;
-            margin-left:75%;
+            margin-top: 3%;
+            margin-left: 75%;
         }
 
         button:hover {
@@ -159,20 +165,22 @@
         }
 
         .footer {
-            position: static;
-            left: 0;
             bottom: 0;
-            height: 90px;
-            width: 100%;
+            height: 80px;
+            min-width: 150%;
             background-color: rgb(51, 48, 48);
             color: white;
             text-align: center;
-            padding-top: 50px;
+            padding-top: 40px;
+            margin-top: 20%;
+            margin-left: -20%;
         }
 
-        .heroimage {
-            background-size: 100% 100%;
+        .heroimage img {
+            background-size: cover;
+            width: 100%;
             position: static;
+            height: 400px;
         }
 
 
@@ -181,6 +189,7 @@
             text-align: center;
             width: 100%;
             padding-top: 10px;
+            margin-top: 5%;
         }
 
         h3 {
@@ -190,7 +199,7 @@
             width: 100%;
             text-align: center;
             font-family: verdana;
-            margin-top: 7%;
+            margin-top: 5%;
             font-size: 30pt;
         }
     </style>
@@ -204,70 +213,92 @@
         </a>
 
         <div id="signup" button onclick="document.getElementById('modal-wrapper').style.display='block'">
-            Sign Up</button></div>
+            Sign Up</button>
+        </div>
 
         <div id="login" button onclick="document.getElementById('modal-wrapper').style.display='block'">
-            Login</button></div>
-
-        </nav>
-
-        <h3>Let's Work Out Together!</h3>
-
-        <div id="modal-wrapper" class="modal">
-
-            <form class="modal-content animate" action="/action_page.php">
-
-                <div class="imgcontainer">
-                    <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
-                    <!-- <img src="1.png" alt="Avatar" class="avatar"> -->
-                    <h1 style="text-align:center">Please Login</h1>
-                </div>
-
-                <div class="container">
-                    <input type="text" placeholder="Enter Username" name="uname">
-                    <input type="password" placeholder="Enter Password" name="psw">
-                    <button type="submit">Login</button>
-                    <a href="#" style="text-decoration:none; float:left; margin-right:34px; margin-top:26px;">Forgot Password ?</a>
-                </div>
-
-            </form>
-
+            Login</button>
         </div>
 
+    </nav>
 
+    <h3>Let's Work Out Together!</h3>
 
-        <div id="modal-register" class="modal">
+    <div id="modal-wrapper" class="modal">
 
-            <form class="modal-content animate" action="/action_page.php">
+        <form class="modal-content animate" action="/action_page.php">
 
-                <div class="imgcontainer">
-                    <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
-                    <!-- <img src="1.png" alt="Avatar" class="avatar"> -->
-                    <h1 style="text-align:center">Please Sign Up</h1>
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
+                <!-- <img src="1.png" alt="Avatar" class="avatar"> -->
+                <h1 style="text-align:center">Please Login</h1>
+            </div>
+
+            <form action='/login' method='POST'>
+            <div class="container">
+                <input type="text" placeholder="Enter Username" name="uname">
+                <input type="password" placeholder="Enter Password" name="psw">
+                <button type="submit">Login</button>
+                <a href="#" style="text-decoration:none; float:left; margin-right:34px; margin-top:26px;">Forgot Password ?</a>
+            </div>
+        </form>
+        </form>
+
+    </div>
+
+    <!-- <div id='login'>
+            <h2>Login</h2>
+            <form action='/login' method='POST'>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    {% if messages %} {% for message in messages %} {% if 'em2ail' in message.tags %}
+                    <p class='messages'> {{message}} </p>
+                    {% endif %} {% endfor %} {% endif %}
+                    <input name="em2ail" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
-
-                <div class="container">
-                    <input type="text" placeholder="Enter Username" name="uname">
-                    <input type="password" placeholder="Enter Password" name="psw">
-                    <button type="submit">Sign Up</button>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    {% if messages %} {% for message in messages %} {% if 'pass2word' in message.tags %}
+                    <p class='messages'> {{message}} </p>
+                    {% endif %} {% endfor %} {% endif %}
+                    <input name='pass2word' type="password" class="form-control" id="exampleInputPassword1">
                 </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form> -->
 
-            </form>
+    <div id="modal-register" class="modal">
 
-        </div>
+        <form class="modal-content animate" action="/action_page.php">
 
-        <script>
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
+                <!-- <img src="1.png" alt="Avatar" class="avatar"> -->
+                <h1 style="text-align:center">Please Sign Up</h1>
+            </div>
 
-            var modal = document.getElementById('modal-wrapper');
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
+            <div class="container">
+                <input type="text" placeholder="Enter Username" name="email">
+                <input type="password" placeholder="Enter Password" name="password">
+                <button type="submit">Sign Up</button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <script>
+
+        var modal = document.getElementById('modal-wrapper');
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
-        </script>
+        }
+    </script>
 
     <div class="heroimage">
-
         {% load static %}
         <img src="{% static 'login_app/img/banner3.png' %}">
     </div>
@@ -349,12 +380,59 @@
     </div>
     </div> -->
 
+    <div id="places_table">
+        <table class="table table-sm table-hover table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Type of workout</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Fitmes Going</th>
+                </tr>
+            </thead>
+            {% for place in place %}
+            <tbody>
+                <tr>
+                    <td>{{place.place_name}}</td>
+                    <td>{{place.fit_type}}</td>
+                    <td>{{place.street}} {{place.city}}, {{place.state}}</td>
+                    <td>{{place.date}}</td>
+                    <td>*Fitmes Going*</td>
+                    <td>
+                        <form action='/going' method='POST' id='liked'>
+                            {% csrf_token %}
+                            <input type='hidden' value={{user.id}} name='user'>
+                            <input type='hidden' value={{place.id}} name='place'>
+                            <button type="submit" class="btn btn-success btn-sm">Going!</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form class='action' action='/edit' method='POST'>
+                            {% csrf_token %}
+                            <input type='hidden' value={{place.id}} name="edit">
+                            <button type='submit' class='btn btn-warning btn-sm'>edit</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action='/cancel' method='POST'>
+                            {% csrf_token %}
+                            <input type='hidden' value={{place.id}} name="cancel">
+                            <button type='submit' onclick="return confirm('Are you sure?')" class='btn btn-danger btn-sm'>cancel</button>
+                        </form>
+                    </td>
 
+                </tr>
+            </tbody>
 
-    <div class="footer">
-        <p>Founded by Ashley, Tim and Nauman</p>
-    </div>
+            {% endfor %}
+        </table>
 
+        <footer class="footer">
+            <p>Created by Ashley, Tim and Nauman</p>
+        </footer>
 </body>
+
+
 
 </html>
