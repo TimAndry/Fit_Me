@@ -6,18 +6,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Welcome to FitMe</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?callback=myMap"></script>
     <style>
-        #topbar {
-            border: 4px solid black;
-            padding: 7px;
-        }
 
-        #topbar li {
-            display: inline;
-        }
+    #topbar {
+      border: 4px solid black;
+      padding: 7px;
+    }
+    #topbar li {
+      display: inline;
+    }
+    #map{
+      height:400px;
+      width:100%;
+    }
     </style>
 </head>
 
@@ -36,7 +37,6 @@
         </ul>
     </div>
     <h2>Upcoming workouts</h2>
-    <!-- Be sure to come back and adjust form routing -->
     <form action="/" method="POST">
         <p>Type of workout:</p>
         <input type="checkbox" name="type" value="Yoga">Yoga/Meditative
@@ -109,15 +109,16 @@
         </script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS_cedue3vzgmFqik8tHHOFirhkWdKwNc&callback=initMap">
         </script>
+
     </div>
     <div id="Suggested Meets">
         <h2>My Suggested Meets</h2>
         <fieldset>
-            {% for friends in friends %}
-            <p>
-                <a href="">{{ friends.first_name }} {{ friends.last_name}}</a>
-            </p>
-            {% endfor %}
+
+          {% for friends in friends %}
+          <p><a href ="">{{ friends.first_name }} {{ friends.last_name}}</a></p>
+          {% endfor %}
+
             <!-- for loop here; manyToMany between users and friends; loop to populate friends' meets -->
         </fieldset>
     </div>
